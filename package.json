@@ -1,0 +1,19 @@
+{
+  "name": "websocket-chat-test",
+  "version": "1.0.0",
+  "description": "Chat web app using web sockets (socket.io) on node.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://patrocinio.ddns.net:3000/patrocinio/websocket-chat-test.git"
+  },
+  "author": "João Patrocínio",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1"
+  }
+}
