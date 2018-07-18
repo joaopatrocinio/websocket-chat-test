@@ -21,3 +21,9 @@ DB_PASS=passowrd
 
 DB_NAME=database
 
+Run the server using: 
+
+```sh
+$ node app.js
+```
+The server will start on localhost:3000, to stop enter Ctrl-C.
