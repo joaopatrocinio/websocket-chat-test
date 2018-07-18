@@ -31,6 +31,15 @@ io.on('connection', function (socket) {
         io.emit('chat message', msg);
     });
 
+    socket.on('get messages', function() {
+        console.log('sending messages to user');
+        var sql = "SELECT * FROM mensagem";
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+            io.emit('get messages', result);
+        });
+    });
+
     socket.on('disconnect', function() {
         console.log('a user disconnected');
     })
