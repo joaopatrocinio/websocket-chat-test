@@ -2,11 +2,17 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mysql = require('mysql');
+require('dotenv').config();
 
 var con = mysql.createConnection({
-    host: "host",
-    user: "user",
-    password: "password"
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME
+});
+
+con.connect(function(err) {
+    if (err) throw err;
 });
 
 app.get('/', function(req, res) {
@@ -18,13 +24,9 @@ io.on('connection', function (socket) {
 
     socket.on('chat message', function(msg) {
         console.log('message: ' + msg)
-        var sql = "INSERT INTO chat.mensagem (mensagem_user_id, mensagem_text) VALUES (1, '" + msg + "');";
-        con.connect(function(err) {
+        var sql = "INSERT INTO mensagem (mensagem_user_id, mensagem_text) VALUES (1, '" + msg + "');";
+        con.query(sql, function (err, result) {
             if (err) throw err;
-            con.query(sql, function (err, result) {
-                if (err) throw err;
-                console.log("Result: " + result);
-            });
         });
         io.emit('chat message', msg);
     });
