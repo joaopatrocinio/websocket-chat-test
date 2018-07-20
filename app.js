@@ -16,7 +16,7 @@ con.connect(function(err) {
 });
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + "/www/index.html");
+    res.send(new Date());
 });
 
 io.on('connection', function (socket) {
@@ -24,8 +24,8 @@ io.on('connection', function (socket) {
 
     socket.on('chat message', function(msg) {
         console.log('message: ' + msg)
-        var sql = "INSERT INTO mensagem (mensagem_user_id, mensagem_text) VALUES (1, '" + msg + "');";
-        con.query(sql, function (err, result) {
+        var sql = "INSERT INTO message (message_user_id, message_text, message_datetime) VALUES (1, ?, ?);";
+        con.query(sql, [msg, new Date()], function (err, result) {
             if (err) throw err;
         });
         io.emit('chat message', msg);
@@ -33,7 +33,7 @@ io.on('connection', function (socket) {
 
     socket.on('get messages', function() {
         console.log('sending messages to user');
-        var sql = "SELECT * FROM mensagem";
+        var sql = "SELECT * FROM message";
         con.query(sql, function (err, result) {
             if (err) throw err;
             io.emit('get messages', result);
