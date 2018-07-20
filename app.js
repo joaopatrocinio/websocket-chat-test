@@ -29,8 +29,8 @@ io.on('connection', function (socket) {
         // 2 - user id
 
         console.log('message: ' + data[0])
-        var sql = "INSERT INTO message (message_user_id, message_text, message_datetime) VALUES (1, ?, ?);";
-        con.query(sql, [data[0], data[1]], function (err, result) {
+        var sql = "INSERT INTO message (message_user_id, message_text, message_datetime) VALUES (?, ?, ?);";
+        con.query(sql, [data[2], data[0], data[1]], function (err, result) {
             if (err) throw err;
         });
         io.emit('chat message', data);
@@ -41,7 +41,7 @@ io.on('connection', function (socket) {
         var sql = "SELECT * FROM message";
         con.query(sql, function (err, result) {
             if (err) throw err;
-            io.emit('get messages', result);
+            io.to(socket.id).emit('get messages', result);
         });
     });
 
