@@ -22,13 +22,18 @@ app.get('/', function(req, res) {
 io.on('connection', function (socket) {
     console.log('a user connected');
 
-    socket.on('chat message', function(msg) {
-        console.log('message: ' + msg)
+    socket.on('chat message', function(data) {
+        // var date[]
+        // 0 - message
+        // 1 - javascript date object
+        // 2 - user id
+
+        console.log('message: ' + data[0])
         var sql = "INSERT INTO message (message_user_id, message_text, message_datetime) VALUES (1, ?, ?);";
-        con.query(sql, [msg, new Date()], function (err, result) {
+        con.query(sql, [data[0], data[1]], function (err, result) {
             if (err) throw err;
         });
-        io.emit('chat message', msg);
+        io.emit('chat message', data);
     });
 
     socket.on('get messages', function() {
