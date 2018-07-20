@@ -16,24 +16,29 @@ con.connect(function(err) {
 });
 
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + "/www/index.html");
+    res.send(new Date());
 });
 
 io.on('connection', function (socket) {
     console.log('a user connected');
 
-    socket.on('chat message', function(msg) {
-        console.log('message: ' + msg)
-        var sql = "INSERT INTO mensagem (mensagem_user_id, mensagem_text) VALUES (1, '" + msg + "');";
-        con.query(sql, function (err, result) {
+    socket.on('chat message', function(data) {
+        // var date[]
+        // 0 - message
+        // 1 - javascript date object
+        // 2 - user id
+
+        console.log('message: ' + data[0])
+        var sql = "INSERT INTO message (message_user_id, message_text, message_datetime) VALUES (1, ?, ?);";
+        con.query(sql, [data[0], data[1]], function (err, result) {
             if (err) throw err;
         });
-        io.emit('chat message', msg);
+        io.emit('chat message', data);
     });
 
     socket.on('get messages', function() {
         console.log('sending messages to user');
-        var sql = "SELECT * FROM mensagem";
+        var sql = "SELECT * FROM message";
         con.query(sql, function (err, result) {
             if (err) throw err;
             io.emit('get messages', result);
